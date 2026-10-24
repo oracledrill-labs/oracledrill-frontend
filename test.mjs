@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createFrontend} from './server.mjs';
+test('serves workbench with restrictive CSP',async()=>{const s=createFrontend();await new Promise(r=>s.listen(0,'127.0.0.1',r));try{const r=await fetch(`http://127.0.0.1:${s.address().port}`);assert.equal(r.status,200);assert.match(r.headers.get('content-security-policy'),/default-src 'self'/);assert.match(await r.text(),/Scenario corpus JSON/)}finally{s.closeAllConnections();s.close()}});
